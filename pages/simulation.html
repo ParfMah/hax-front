@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation de prêt — HaxFinance</title>
+  <meta name="description" content="Simulez votre prêt en ligne gratuitement. Calculez vos mensualités instantanément et soumettez votre demande." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <style>
+    /* ── Styles spécifiques simulation ── */
+
+    /* Étapes du formulaire */
+    .etapes {
+      display: flex; align-items: center;
+      gap: 0; margin-bottom: 36px;
+      overflow: hidden; border-radius: 12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .etape {
+      flex: 1; display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+      padding: 14px 12px;
+      font-size: .82rem; font-weight: 600;
+      color: var(--gris-texte);
+      transition: var(--transition);
+      position: relative; cursor: pointer;
+    }
+    .etape.actif {
+      background: rgba(0,200,150,.12);
+      color: var(--vert);
+    }
+    .etape.fait {
+      color: var(--gris-texte);
+    }
+    .etape.fait::after {
+      content: '✓';
+      color: var(--vert);
+    }
+    .etape-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; flex-shrink: 0;
+    }
+    .etape.actif .etape-num { background: var(--vert); color: var(--bleu-nuit); }
+
+    /* Séparateur entre étapes */
+    .etape:not(:last-child)::before {
+      content: '';
+      position: absolute; right: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 1px; height: 50%;
+      background: rgba(255,255,255,.08);
+    }
+
+    /* Sélection type de prêt (boutons radio visuels) */
+    .type-pret-grille {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+      margin-bottom: 6px;
+    }
+    .type-pret-btn {
+      background: rgba(255,255,255,.04);
+      border: 2px solid rgba(255,255,255,.1);
+      border-radius: 10px; padding: 14px 12px;
+      cursor: pointer; text-align: center;
+      transition: var(--transition);
+      color: var(--gris-texte);
+    }
+    .type-pret-btn:hover {
+      border-color: rgba(0,200,150,.3);
+      color: var(--blanc);
+    }
+    .type-pret-btn.selectionne {
+      border-color: var(--vert);
+      background: rgba(0,200,150,.1);
+      color: var(--vert);
+    }
+    .type-pret-btn .emoji { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+    .type-pret-btn .nom   { font-size: .88rem; font-weight: 600; display: block; }
+    .type-pret-btn .taux  { font-size: .78rem; margin-top: 2px; }
+
+    /* Légende graphique capital vs intérêts */
+    .graphe-section { margin: 24px 0; }
+    .graphe-barre {
+      display: flex; height: 10px; border-radius: 5px;
+      overflow: hidden; margin-bottom: 10px;
+    }
+    .barre-seg-capital {
+      background: var(--vert);
+      transition: width 0.6s ease;
+    }
+    .barre-seg-interets {
+      background: var(--bleu-clair);
+      transition: width 0.6s ease;
+    }
+    .graphe-legende {
+      display: flex; gap: 20px;
+    }
+    .legende-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .8rem; color: var(--gris-texte);
+    }
+    .legende-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .legende-dot.vert    { background: var(--vert); }
+    .legende-dot.bleu    { background: var(--bleu-clair); }
+
+    /* Indicateur taux d'endettement */
+    .indicateur {
+      display: inline-block;
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.2);
+    }
+    .indicateur.vert   { background: #22c55e; border-color: #22c55e; }
+    .indicateur.orange { background: #f59e0b; border-color: #f59e0b; }
+    .indicateur.rouge  { background: #ef4444; border-color: #ef4444; }
+
+    /* Résultat mensualité (grande) */
+    .mensualite-grande {
+      font-family: var(--font-titre);
+      font-size: 2.8rem; font-weight: 700;
+      color: var(--vert); line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    /* Toast de succès */
+    .toast {
+      position: fixed; bottom: 30px; right: 30px;
+      background: var(--bleu-fonce);
+      border: 1px solid var(--vert);
+      border-radius: 14px; padding: 16px 22px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: var(--shadow);
+      transform: translateX(120%);
+      transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+      z-index: 200;
+    }
+    .toast.visible { transform: translateX(0); }
+    .toast-icone { font-size: 1.4rem; }
+    .toast strong { display: block; color: var(--blanc); }
+    .toast span   { font-size: .85rem; color: var(--gris-texte); }
+
+    /* Section avantages simulation */
+    .avantages-sim {
+      display: flex; flex-direction: column; gap: 14px; margin-top: 28px;
+    }
+    .avantage-sim-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: .9rem; color: var(--gris-texte);
+    }
+    .avantage-sim-item::before {
+      content: '✓';
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,200,150,.15);
+      color: var(--vert); font-size: .7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-logo">Hax<span>Finance</span></div>
+    <div class="loader-bar"></div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none">
+      <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" fill="#00C896" opacity=".2"/>
+      <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" stroke="#00C896" stroke-width="1.5"/>
+      <path d="M9 14l3 3 7-6" stroke="#00C896" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Hax<span>Finance</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Accueil</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="simulation.html" class="actif">Simulation</a></li>
+    <li><a href="apropos.html">À propos</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="simulation.html" class="nav-cta">Simuler un prêt</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile">
+  <a href="../index.html">Accueil</a>
+  <a href="services.html">Services</a>
+  <a href="simulation.html">Simulation</a>
+  <a href="apropos.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="simulation.html" class="nav-cta" style="text-align:center;border-radius:50px;">Simuler un prêt</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE HERO
+═══════════════════════════════════════════════════════ -->
+<section class="page-hero">
+  <div class="conteneur">
+    <div class="badge">🧮 Outil gratuit</div>
+    <h1 class="titre-section">Simuler et demander<br>votre <span class="accent">prêt en ligne</span></h1>
+    <p class="sous-titre">Calculez instantanément vos mensualités et soumettez votre demande. Sans engagement, sans frais.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FORMULAIRE + RÉSULTAT
+═══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="simulation-grille">
+
+      <!-- ══ FORMULAIRE ══════════════════════════════════ -->
+      <div>
+        <form id="form-simulation" novalidate>
+          <div class="formulaire-card">
+
+            <!-- Indicateur d'étapes -->
+            <div class="etapes">
+              <div class="etape actif">
+                <div class="etape-num">1</div>
+                <span>Votre prêt</span>
+              </div>
+              <div class="etape">
+                <div class="etape-num">2</div>
+                <span>Vos infos</span>
+              </div>
+              <div class="etape">
+                <div class="etape-num">3</div>
+                <span>Confirmation</span>
+              </div>
+            </div>
+
+            <!-- ─── SECTION 1 : Type et montant ─── -->
+            <h2 class="form-titre">Votre simulation de prêt</h2>
+
+            <!-- Type de prêt (boutons visuels) -->
+            <div class="form-groupe">
+              <label>Type de prêt</label>
+              <div class="type-pret-grille">
+                <button type="button" class="type-pret-btn selectionne" data-type="personnel">
+                  <span class="emoji">💳</span>
+                  <span class="nom">Personnel</span>
+                  <span class="taux" style="color:var(--vert)">3,0% / an</span>
+                </button>
+                <button type="button" class="type-pret-btn" data-type="immobilier">
+                  <span class="emoji">🏠</span>
+                  <span class="nom">Immobilier</span>
+                  <span class="taux" style="color:var(--vert)">2,1% / an</span>
+                </button>
+                <button type="button" class="type-pret-btn" data-type="automobile">
+                  <span class="emoji">🚗</span>
+                  <span class="nom">Automobile</span>
+                  <span class="taux" style="color:var(--vert)">2,7% / an</span>
+                </button>
+                <button type="button" class="type-pret-btn" data-type="rachat">
+                  <span class="emoji">🔄</span>
+                  <span class="nom">Rachat crédit</span>
+                  <span class="taux" style="color:var(--vert)">2,8% / an</span>
+                </button>
+              </div>
+              <!-- Input caché pour la valeur -->
+              <input type="hidden" id="type-pret" value="personnel" />
+            </div>
+
+            <!-- Montant -->
+            <div class="form-groupe">
+              <label for="montant">Montant souhaité (€)</label>
+              <input type="number" id="montant" name="montant"
+                     placeholder="Ex: 15000" min="1000" max="2000000"
+                     value="15000" required />
+              <div class="erreur">Le montant minimum est 1 000 €.</div>
+            </div>
+
+            <!-- Durée (slider) -->
+            <div class="form-groupe">
+              <label>
+                Durée de remboursement :
+                <strong id="affiche-duree" style="color:var(--vert)">12 mois</strong>
+              </label>
+              <input type="range" id="duree" name="duree"
+                     min="6" max="300" step="6" value="48" />
+              <div class="slider-labels">
+                <span>6 mois</span>
+                <span>25 ans</span>
+              </div>
+            </div>
+
+            <!-- Revenus mensuels (pour taux d'endettement) -->
+            <div class="form-groupe">
+              <label for="revenu">Revenus nets mensuels (€)</label>
+              <input type="number" id="revenu" name="revenu"
+                     placeholder="Ex: 2500" min="0" />
+              <div class="erreur">Veuillez indiquer vos revenus mensuels.</div>
+              <p style="font-size:.8rem;color:var(--gris-texte);margin-top:6px;">
+                💡 Optionnel — permet de calculer votre taux d'endettement
+              </p>
+            </div>
+
+            <hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:28px 0;" />
+
+            <!-- ─── SECTION 2 : Informations personnelles ─── -->
+            <h2 class="form-titre" style="margin-bottom:24px;">Vos informations</h2>
+
+            <div class="form-ligne">
+              <div class="form-groupe">
+                <label for="prenom">Prénom *</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Marie" required />
+                <div class="erreur">Veuillez entrer votre prénom.</div>
+              </div>
+              <div class="form-groupe">
+                <label for="nom">Nom *</label>
+                <input type="text" id="nom" name="nom" placeholder="Dupont" required />
+                <div class="erreur">Veuillez entrer votre nom.</div>
+              </div>
+            </div>
+
+            <div class="form-ligne">
+              <div class="form-groupe">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" placeholder="marie@email.com" required />
+                <div class="erreur">Adresse email invalide.</div>
+              </div>
+              <div class="form-groupe">
+                <label for="tel">Téléphone *</label>
+                <input type="tel" id="tel" name="tel" placeholder="06 12 34 56 78" required />
+                <div class="erreur">Numéro de téléphone invalide.</div>
+              </div>
+            </div>
+
+            <div class="form-groupe">
+              <label for="situation">Situation professionnelle</label>
+              <select id="situation" name="situation">
+                <option value="">— Sélectionner —</option>
+                <option value="salarie-cdi">Salarié CDI</option>
+                <option value="salarie-cdd">Salarié CDD</option>
+                <option value="independant">Travailleur indépendant</option>
+                <option value="retraite">Retraité</option>
+                <option value="etudiant">Étudiant</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+
+            <div class="form-groupe">
+              <label for="message">Message ou précision (optionnel)</label>
+              <textarea id="message" name="message" rows="3"
+                        placeholder="Ex: Je souhaite acheter un appartement à Paris…"
+                        style="resize:vertical"></textarea>
+            </div>
+
+            <!-- CGU -->
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:24px;">
+              <input type="checkbox" id="cgu" style="width:18px;height:18px;margin-top:2px;accent-color:var(--vert);flex-shrink:0;" required />
+              <span style="font-size:.85rem;color:var(--gris-texte);">
+                J'accepte les <a href="#" style="color:var(--vert)">conditions d'utilisation</a> et la
+                <a href="#" style="color:var(--vert)">politique de confidentialité</a> de HaxFinance.
+              </span>
+            </label>
+
+            <button type="submit" class="btn btn-vert" style="width:100%;justify-content:center;font-size:1rem;padding:16px;">
+              Envoyer ma demande de prêt ➜
+            </button>
+
+          </div><!-- /formulaire-card -->
+        </form>
+      </div>
+
+      <!-- ══ RÉSULTAT (sticky) ══════════════════════════ -->
+      <div>
+        <div class="resultat-card">
+
+          <div class="resultat-titre">Mensualité estimée</div>
+          <div class="mensualite-grande">
+            <span id="res-mensualite">462,68 €</span>
+          </div>
+          <div class="resultat-sous">Calculé en temps réel · Hors assurance</div>
+
+          <div class="separateur"></div>
+
+          <div class="resultat-details">
+            <div class="detail-ligne">
+              <span class="label">Type de prêt</span>
+              <span class="valeur" id="res-type">Personnel</span>
+            </div>
+            <div class="detail-ligne">
+              <span class="label">Taux annuel</span>
+              <span class="valeur vert" id="res-taux">3,0 %</span>
+            </div>
+            <div class="detail-ligne">
+              <span class="label">Capital emprunté</span>
+              <span class="valeur" id="res-montant">15 000,00 €</span>
+            </div>
+            <div class="detail-ligne">
+              <span class="label">Durée</span>
+              <span class="valeur" id="res-duree">48 mois</span>
+            </div>
+            <div class="detail-ligne">
+              <span class="label">Coût total du crédit</span>
+              <span class="valeur" id="res-cout-total">22 208,64 €</span>
+            </div>
+            <div class="detail-ligne">
+              <span class="label">Dont intérêts</span>
+              <span class="valeur" id="res-interets">7 208,64 €</span>
+            </div>
+          </div>
+
+          <!-- Graphe capital vs intérêts -->
+          <div class="graphe-section">
+            <div style="font-size:.8rem;color:var(--gris-texte);margin-bottom:8px;">Répartition capital / intérêts</div>
+            <div class="graphe-barre">
+              <div class="barre-seg-capital" id="barre-capital" style="width:67%"></div>
+              <div class="barre-seg-interets" id="barre-interets" style="width:33%"></div>
+            </div>
+            <div class="graphe-legende">
+              <div class="legende-item"><span class="legende-dot vert"></span>Capital</div>
+              <div class="legende-item"><span class="legende-dot bleu"></span>Intérêts</div>
+            </div>
+          </div>
+
+          <!-- Taux d'endettement -->
+          <div class="separateur"></div>
+          <div class="detail-ligne">
+            <span class="label">Taux d'endettement</span>
+            <span style="display:flex;align-items:center;gap:8px;">
+              <span class="valeur" id="res-taux-endett">—</span>
+              <span class="indicateur" id="indicateur-endett"></span>
+            </span>
+          </div>
+          <p style="font-size:.78rem;color:var(--gris-texte);margin-top:6px;">
+            Le taux d'endettement recommandé est ≤ 33% des revenus.
+          </p>
+
+          <div class="separateur"></div>
+
+          <!-- Avantages rappel -->
+          <div class="avantages-sim">
+            <div class="avantage-sim-item">Simulation 100% gratuite, sans engagement</div>
+            <div class="avantage-sim-item">Réponse de principe sous 24h</div>
+            <div class="avantage-sim-item">Aucun impact sur votre score de crédit</div>
+          </div>
+
+        </div><!-- /resultat-card -->
+      </div>
+
+    </div><!-- /simulation-grille -->
+  </div>
+</section>
+
+<!-- Toast de confirmation -->
+<div class="toast" id="toast">
+  <span class="toast-icone">🎉</span>
+  <div>
+    <strong>Demande envoyée !</strong>
+    <span>Nous vous recontacterons sous 24h.</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="conteneur">
+    <div class="footer-grille">
+      <div>
+        <div class="footer-logo">Hax<span>Finance</span></div>
+        <p class="footer-desc">Votre partenaire financier de confiance depuis 2010.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#personnel">Prêt personnel</a></li>
+          <li><a href="services.html#immobilier">Prêt immobilier</a></li>
+          <li><a href="services.html#automobile">Prêt automobile</a></li>
+          <li><a href="services.html#rachat">Rachat de crédit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Entreprise</h4>
+        <ul>
+          <li><a href="apropos.html">À propos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Confidentialité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bas">
+      <p>© 2025 HaxFinance. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<script src="../js/simulation.js"></script>
+<script>
+/* ── Boutons type de prêt (UI) ── */
+document.querySelectorAll('.type-pret-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Retirer sélection précédente
+    document.querySelectorAll('.type-pret-btn').forEach(b => b.classList.remove('selectionne'));
+    btn.classList.add('selectionne');
+
+    // Mettre à jour l'input caché
+    const type = btn.getAttribute('data-type');
+    document.getElementById('type-pret').value = type;
+
+    // Mettre à jour l'affichage du résultat "Type"
+    const noms = { personnel:'Personnel', immobilier:'Immobilier', automobile:'Automobile', rachat:'Rachat de crédit' };
+    const resType = document.getElementById('res-type');
+    if (resType) resType.textContent = noms[type] || type;
+
+    // Recalculer
+    if (typeof calculer === 'function') calculer();
+  });
+});
+
+/* ── Toast de succès ── */
+const formSim = document.getElementById('form-simulation');
+const toast   = document.getElementById('toast');
+if (formSim && toast) {
+  formSim.addEventListener('submit', (e) => {
+    // La validation se fait dans simulation.js
+    // Si le formulaire n'est pas bloqué, afficher le toast
+    setTimeout(() => {
+      // Vérifier si le bouton a été désactivé (= soumission réussie)
+      const btn = formSim.querySelector('button[type="submit"]');
+      if (btn && btn.disabled) {
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 4000);
+      }
+    }, 100);
+  });
+}
+
+/* ── Lire le paramètre ?type= dans l'URL ── */
+const params = new URLSearchParams(window.location.search);
+const typeURL = params.get('type');
+if (typeURL) {
+  const btn = document.querySelector(`.type-pret-btn[data-type="${typeURL}"]`);
+  if (btn) {
+    document.querySelectorAll('.type-pret-btn').forEach(b => b.classList.remove('selectionne'));
+    btn.classList.add('selectionne');
+    document.getElementById('type-pret').value = typeURL;
+  }
+}
+</script>
+<script src="../js/api.js"></script>
+</body>
+</html>

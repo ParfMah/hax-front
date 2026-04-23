@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À propos — HaxFinance</title>
+  <meta name="description" content="Découvrez HaxFinance, notre histoire, notre équipe et nos valeurs depuis 2010." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <style>
+    /* ── Styles spécifiques À propos ── */
+
+    /* Frise chronologique */
+    .timeline {
+      position: relative;
+      padding-left: 36px;
+      max-width: 700px; margin: 0 auto;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 10px; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--vert), transparent);
+    }
+    .timeline-item {
+      position: relative; margin-bottom: 40px;
+      padding: 24px;
+      background: var(--bleu-fonce);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      transition: var(--transition);
+    }
+    .timeline-item:hover {
+      border-color: rgba(0,200,150,.25);
+      transform: translateX(6px);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute; left: -29px; top: 28px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--vert);
+      border: 3px solid var(--bleu-nuit);
+      box-shadow: 0 0 0 3px rgba(0,200,150,.2);
+    }
+    .timeline-annee {
+      font-size: .78rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--vert); margin-bottom: 6px;
+    }
+    .timeline-titre {
+      font-weight: 700; color: var(--blanc); margin-bottom: 6px;
+    }
+    .timeline-desc { font-size: .92rem; color: var(--gris-texte); }
+
+    /* Stats en bandeau */
+    .stats-bande {
+      background: linear-gradient(135deg, var(--bleu-moyen), rgba(0,200,150,.08));
+      border-top: 1px solid rgba(0,200,150,.15);
+      border-bottom: 1px solid rgba(0,200,150,.15);
+      padding: 60px 0;
+    }
+    .stats-bande-grille {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px; text-align: center;
+    }
+    .stat-bande-item .nombre {
+      font-family: var(--font-titre);
+      font-size: 2.8rem; font-weight: 700;
+      color: var(--vert); line-height: 1;
+    }
+    .stat-bande-item .label {
+      font-size: .88rem; color: var(--gris-texte); margin-top: 6px;
+    }
+
+    /* Carte partenaire */
+    .partenaires-grille {
+      display: flex; flex-wrap: wrap;
+      gap: 16px; align-items: center; justify-content: center;
+    }
+    .partenaire {
+      background: var(--bleu-fonce);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px; padding: 16px 28px;
+      font-weight: 700; color: var(--gris-texte);
+      font-size: .95rem; letter-spacing: .04em;
+      transition: var(--transition);
+    }
+    .partenaire:hover {
+      border-color: rgba(0,200,150,.25);
+      color: var(--blanc);
+    }
+
+    @media (max-width: 600px) {
+      .stats-bande-grille { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-logo">Hax<span>Finance</span></div>
+    <div class="loader-bar"></div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none">
+      <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" fill="#00C896" opacity=".2"/>
+      <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" stroke="#00C896" stroke-width="1.5"/>
+      <path d="M9 14l3 3 7-6" stroke="#00C896" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Hax<span>Finance</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Accueil</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="simulation.html">Simulation</a></li>
+    <li><a href="apropos.html" class="actif">À propos</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="simulation.html" class="nav-cta">Simuler un prêt</a></li>
+  </ul>
+  <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile">
+  <a href="../index.html">Accueil</a>
+  <a href="services.html">Services</a>
+  <a href="simulation.html">Simulation</a>
+  <a href="apropos.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="simulation.html" class="nav-cta" style="text-align:center;border-radius:50px;">Simuler un prêt</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PAGE HERO
+═══════════════════════════════════════════════════════ -->
+<section class="page-hero">
+  <div class="conteneur">
+    <div class="badge">Notre histoire</div>
+    <h1 class="titre-section">Qui sommes-<span class="accent">nous</span> ?</h1>
+    <p class="sous-titre">Depuis 2010, HaxFinance accompagne des milliers de particuliers dans leurs projets de financement avec transparence et expertise.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     PRÉSENTATION
+═══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="apropos-hero-grille">
+
+      <!-- Image -->
+      <div class="apropos-img fade-in">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80"
+             alt="Équipe HaxFinance" loading="lazy" />
+      </div>
+
+      <!-- Texte -->
+      <div class="fade-in fade-in-delay-2">
+        <div class="badge">Notre mission</div>
+        <h2 class="titre-section">Le financement <span class="accent">accessible à tous</span></h2>
+        <p style="color:var(--gris-texte);margin-bottom:18px;line-height:1.85;">
+          HaxFinance est née d'une conviction simple : accéder au crédit doit être transparent, rapide et équitable pour tous. Fondée en 2010 par une équipe d'experts financiers, notre société a su combiner expertise bancaire et innovation digitale.
+        </p>
+        <p style="color:var(--gris-texte);margin-bottom:30px;line-height:1.85;">
+          Aujourd'hui, nous sommes l'un des courtiers en crédit les plus reconnus en France, avec plus de 15 000 clients financés et un portefeuille de partenaires bancaires parmi les plus solides du marché.
+        </p>
+
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <a href="simulation.html" class="btn btn-vert">Simuler un prêt</a>
+          <a href="contact.html" class="btn btn-outline">Nous contacter</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     STATISTIQUES
+═══════════════════════════════════════════════════════ -->
+<div class="stats-bande">
+  <div class="conteneur">
+    <div class="stats-bande-grille">
+      <div class="stat-bande-item fade-in">
+        <div class="nombre">
+          <span data-cible="15000" data-suffixe="+">0</span>
+        </div>
+        <div class="label">Clients financés</div>
+      </div>
+      <div class="stat-bande-item fade-in fade-in-delay-1">
+        <div class="nombre">
+          <span data-cible="850" data-suffixe="M€">0</span>
+        </div>
+        <div class="label">Crédits accordés</div>
+      </div>
+      <div class="stat-bande-item fade-in fade-in-delay-2">
+        <div class="nombre">
+          <span data-cible="15" data-suffixe=" ans">0</span>
+        </div>
+        <div class="label">D'expérience</div>
+      </div>
+      <div class="stat-bande-item fade-in fade-in-delay-3">
+        <div class="nombre">
+          <span data-cible="98" data-suffixe="%">0</span>
+        </div>
+        <div class="label">Clients satisfaits</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     NOS VALEURS
+═══════════════════════════════════════════════════════ -->
+<section id="valeurs" class="section section-alt">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Ce qui nous guide</div>
+      <h2 class="titre-section">Nos <span class="accent">valeurs fondamentales</span></h2>
+      <p class="sous-titre">Chaque décision chez HaxFinance est guidée par ces trois principes essentiels.</p>
+    </div>
+
+    <div class="valeurs-grille">
+      <div class="carte-valeur fade-in fade-in-delay-1">
+        <div class="valeur-icone">🤝</div>
+        <h3>Confiance</h3>
+        <p>La transparence est notre boussole. Aucun frais caché, aucune mauvaise surprise. Vous savez exactement ce que vous payez.</p>
+      </div>
+      <div class="carte-valeur fade-in fade-in-delay-2">
+        <div class="valeur-icone">⚡</div>
+        <h3>Réactivité</h3>
+        <p>Le temps de nos clients est précieux. Nous nous engageons à répondre sous 24 heures et à traiter les dossiers avec rapidité.</p>
+      </div>
+      <div class="carte-valeur fade-in fade-in-delay-3">
+        <div class="valeur-icone">💡</div>
+        <h3>Innovation</h3>
+        <p>Nous utilisons les outils technologiques les plus avancés pour simplifier votre expérience et améliorer nos services continuellement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     NOTRE HISTOIRE (TIMELINE)
+═══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Notre parcours</div>
+      <h2 class="titre-section">15 ans d'<span class="accent">histoire</span></h2>
+      <p class="sous-titre" style="margin-bottom:60px;">Les grandes étapes qui ont fait de HaxFinance ce qu'elle est aujourd'hui.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item fade-in">
+        <div class="timeline-annee">2010</div>
+        <div class="timeline-titre">Fondation de HaxFinance</div>
+        <div class="timeline-desc">Création de la société par Jean-Marc Haxel et son équipe avec une vision : rendre le crédit accessible et transparent pour tous.</div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-annee">2013</div>
+        <div class="timeline-titre">Premier cap : 1 000 clients</div>
+        <div class="timeline-desc">Fort du bouche-à-oreille, HaxFinance franchit la barre des 1 000 clients financés et ouvre une seconde agence à Lyon.</div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-annee">2016</div>
+        <div class="timeline-titre">Lancement de la plateforme digitale</div>
+        <div class="timeline-desc">Déploiement du simulateur en ligne et de la demande de prêt 100% digitale, révolutionnant l'expérience client.</div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-annee">2019</div>
+        <div class="timeline-titre">Agrément ACPR et expansion</div>
+        <div class="timeline-desc">Obtention de l'agrément ACPR et ouverture de 5 nouvelles agences en France. Lancement du service de rachat de crédit.</div>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-annee">2024</div>
+        <div class="timeline-titre">15 000 clients financés</div>
+        <div class="timeline-desc">Un milestone historique : plus de 850 millions d'euros de crédits accordés et 98% de satisfaction client.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ÉQUIPE
+═══════════════════════════════════════════════════════ -->
+<section id="equipe" class="section section-alt">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Les visages de HaxFinance</div>
+      <h2 class="titre-section">Notre <span class="accent">équipe dirigeante</span></h2>
+      <p class="sous-titre">Des experts passionnés avec des décennies d'expérience dans la finance.</p>
+    </div>
+
+    <div class="equipe-grille">
+
+      <div class="carte-membre fade-in fade-in-delay-1">
+        <div class="membre-img">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
+               alt="Jean-Marc Haxel" loading="lazy" />
+        </div>
+        <div class="membre-infos">
+          <h3>Jean-Marc Haxel</h3>
+          <span>Fondateur & PDG</span>
+        </div>
+      </div>
+
+      <div class="carte-membre fade-in fade-in-delay-2">
+        <div class="membre-img">
+          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80"
+               alt="Claire Moreau" loading="lazy" />
+        </div>
+        <div class="membre-infos">
+          <h3>Claire Moreau</h3>
+          <span>Directrice des Opérations</span>
+        </div>
+      </div>
+
+      <div class="carte-membre fade-in fade-in-delay-3">
+        <div class="membre-img">
+          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80"
+               alt="Antoine Lebrun" loading="lazy" />
+        </div>
+        <div class="membre-infos">
+          <h3>Antoine Lebrun</h3>
+          <span>Directeur Financier</span>
+        </div>
+      </div>
+
+      <div class="carte-membre fade-in fade-in-delay-4">
+        <div class="membre-img">
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80"
+               alt="Nadia Kamara" loading="lazy" />
+        </div>
+        <div class="membre-infos">
+          <h3>Nadia Kamara</h3>
+          <span>Responsable Relation Client</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     PARTENAIRES
+═══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Nos partenaires bancaires</div>
+      <h2 class="titre-section">Un réseau <span class="accent">de confiance</span></h2>
+      <p class="sous-titre" style="margin-bottom:40px;">Nous travaillons avec les meilleures institutions financières pour vous obtenir les meilleurs taux.</p>
+    </div>
+    <div class="partenaires-grille fade-in">
+      <div class="partenaire">BNP Paribas</div>
+      <div class="partenaire">Crédit Agricole</div>
+      <div class="partenaire">Société Générale</div>
+      <div class="partenaire">LCL</div>
+      <div class="partenaire">La Banque Postale</div>
+      <div class="partenaire">Caisse d'Épargne</div>
+      <div class="partenaire">ING</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-cta fade-in">
+  <div class="conteneur">
+    <div class="badge" style="margin:0 auto 18px;">🚀 Rejoignez nos clients</div>
+    <h2 class="titre-section">Faites partie de nos <span class="accent">15 000 clients</span> satisfaits</h2>
+    <p class="sous-titre">Démarrez votre simulation gratuite dès maintenant.</p>
+    <div class="actions">
+      <a href="simulation.html" class="btn btn-vert">Simuler mon prêt</a>
+      <a href="contact.html" class="btn btn-outline">Contacter l'équipe</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="conteneur">
+    <div class="footer-grille">
+      <div>
+        <div class="footer-logo">Hax<span>Finance</span></div>
+        <p class="footer-desc">Votre partenaire financier de confiance depuis 2010.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html#personnel">Prêt personnel</a></li>
+          <li><a href="services.html#immobilier">Prêt immobilier</a></li>
+          <li><a href="services.html#automobile">Prêt automobile</a></li>
+          <li><a href="services.html#rachat">Rachat de crédit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Entreprise</h4>
+        <ul>
+          <li><a href="apropos.html">À propos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Confidentialité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bas">
+      <p>© 2025 HaxFinance. Tous droits réservés.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

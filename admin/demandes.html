@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demandes — HaxFinance Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ═══════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" fill="#00C896" opacity=".2"/>
+        <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" stroke="#00C896" stroke-width="1.5"/>
+        <path d="M9 14l3 3 7-6" stroke="#00C896" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Hax<span>Finance</span>
+      <span class="sidebar-badge">Admin</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-titre">Tableau de bord</div>
+      <a href="dashboard.html" class="nav-lien">
+        <span class="icone">📊</span> Vue d'ensemble
+      </a>
+
+      <div class="nav-section-titre" style="margin-top:12px;">Gestion</div>
+      <a href="demandes.html" class="nav-lien actif">
+        <span class="icone">📋</span> Toutes les demandes
+        <span class="badge-statut en_attente nav-badge" id="badge-en-attente" style="display:none;">0</span>
+      </a>
+      <a href="demandes.html?statut=en_attente" class="nav-lien" id="nav-en-attente">
+        <span class="icone">🕐</span> En attente
+      </a>
+      <a href="demandes.html?statut=en_cours" class="nav-lien">
+        <span class="icone">⚙️</span> En cours
+      </a>
+      <a href="demandes.html?statut=approuve" class="nav-lien">
+        <span class="icone">✅</span> Approuvées
+      </a>
+      <a href="demandes.html?statut=refuse" class="nav-lien">
+        <span class="icone">❌</span> Refusées
+      </a>
+
+      <div class="nav-section-titre" style="margin-top:12px;">Site public</div>
+      <a href="../../index.html" class="nav-lien" target="_blank">
+        <span class="icone">🌐</span> Voir le site
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div class="user-info">
+          <strong>Administrateur</strong>
+          <span>Conseiller principal</span>
+        </div>
+        <button class="btn-deconnexion" onclick="deconnecter()">Quitter</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════
+       CONTENU PRINCIPAL
+  ═══════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="burger-admin" id="burger-admin" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-titre">
+        Demandes de prêt
+        <small id="topbar-sous">Chargement…</small>
+      </div>
+      <div class="topbar-actions">
+        <button
+          onclick="exporterCSV()"
+          style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:var(--texte);font-size:.82rem;font-weight:600;cursor:pointer;">
+          📥 Exporter CSV
+        </button>
+        <button
+          onclick="rafraichirListe()"
+          style="padding:8px 12px;background:rgba(0,200,150,.1);border:1px solid rgba(0,200,150,.25);border-radius:8px;color:var(--vert);font-size:.82rem;font-weight:600;cursor:pointer;"
+          title="Actualiser">
+          ↻
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenu liste des demandes -->
+    <main class="page-contenu" id="tableau-section">
+
+      <!-- ── Mini stats rapides ────────────────────── -->
+      <div id="mini-stats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
+        <div style="background:var(--bleu-fonce);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 18px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">📋</span>
+          <div>
+            <div style="font-size:.72rem;color:var(--gris-texte);">Total</div>
+            <div style="font-weight:700;color:var(--blanc);" id="ms-total">—</div>
+          </div>
+        </div>
+        <div style="background:var(--bleu-fonce);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 18px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">🕐</span>
+          <div>
+            <div style="font-size:.72px;color:var(--gris-texte);">En attente</div>
+            <div style="font-weight:700;color:var(--or);" id="ms-attente">—</div>
+          </div>
+        </div>
+        <div style="background:var(--bleu-fonce);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:12px 18px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.2rem;">✅</span>
+          <div>
+            <div style="font-size:.72rem;color:var(--gris-texte);">Approuvées</div>
+            <div style="font-weight:700;color:var(--vert);" id="ms-approuve">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Filtres + Recherche ────────────────────── -->
+      <div class="filtres-barre">
+        <!-- Recherche par nom / email / référence -->
+        <div class="recherche-wrap">
+          <span class="icone-search">🔍</span>
+          <input
+            type="search"
+            class="input-recherche"
+            id="input-recherche"
+            placeholder="Rechercher par nom, email, référence…"
+          />
+        </div>
+
+        <!-- Filtre statut -->
+        <select class="select-filtre" id="filtre-statut">
+          <option value="">Tous les statuts</option>
+          <option value="en_attente">🕐 En attente</option>
+          <option value="en_cours">⚙️ En cours</option>
+          <option value="approuve">✅ Approuvé</option>
+          <option value="refuse">❌ Refusé</option>
+          <option value="annule">🚫 Annulé</option>
+        </select>
+
+        <!-- Filtre type de prêt -->
+        <select class="select-filtre" id="filtre-type">
+          <option value="">Tous les types</option>
+          <option value="personnel">💳 Personnel</option>
+          <option value="immobilier">🏠 Immobilier</option>
+          <option value="automobile">🚗 Automobile</option>
+          <option value="rachat">🔄 Rachat</option>
+        </select>
+
+        <!-- Bouton réinitialiser filtres -->
+        <button class="btn-filtre" id="btn-reset-filtres" onclick="reinitialiserFiltres()">
+          ✕ Effacer les filtres
+        </button>
+      </div>
+
+      <!-- ── Tableau ─────────────────────────────────── -->
+      <div class="carte" style="padding:0">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="checkbox-td">
+                  <input type="checkbox" id="cb-tout" title="Tout sélectionner" style="accent-color:var(--vert);width:15px;height:15px;" />
+                </th>
+                <th onclick="trierPar('reference')" class="tri-actif">
+                  Référence <span class="tri-icone" id="tri-reference">↓</span>
+                </th>
+                <th onclick="trierPar('client.nom')">
+                  Client <span class="tri-icone" id="tri-client.nom"></span>
+                </th>
+                <th onclick="trierPar('pret.typePret')">
+                  Type <span class="tri-icone" id="tri-pret.typePret"></span>
+                </th>
+                <th onclick="trierPar('pret.montant')">
+                  Montant <span class="tri-icone" id="tri-pret.montant"></span>
+                </th>
+                <th onclick="trierPar('createdAt')">
+                  Date <span class="tri-icone" id="tri-createdAt">↓</span>
+                </th>
+                <th onclick="trierPar('statut')">
+                  Statut <span class="tri-icone" id="tri-statut"></span>
+                </th>
+                <th style="width:60px"></th>
+              </tr>
+            </thead>
+            <tbody id="tbody-demandes">
+              <!-- Rempli par admin.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-info" id="pagination-info">—</div>
+          <div class="pagination-btns" id="pagination-btns"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Panneau détail -->
+<div class="overlay" id="overlay" onclick="fermerPanneau()"></div>
+<div class="panneau-detail" id="panneau-detail">
+  <div class="panneau-header">
+    <div>
+      <div class="panneau-titre" id="panneau-titre">Demande</div>
+      <div class="panneau-ref" id="panneau-ref"></div>
+    </div>
+    <button class="btn-fermer" onclick="fermerPanneau()">✕</button>
+  </div>
+  <div class="panneau-corps">
+    <div class="detail-section">
+      <div class="detail-section-titre">👤 Client</div>
+      <div class="detail-ligne"><span class="detail-label">Nom</span><span class="detail-valeur" id="d-nom">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Email</span><span class="detail-valeur" id="d-email">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Téléphone</span><span class="detail-valeur" id="d-tel">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Situation</span><span class="detail-valeur" id="d-situation">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Date demande</span><span class="detail-valeur" id="d-date">—</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-titre">💰 Prêt</div>
+      <div class="detail-ligne"><span class="detail-label">Type</span><span class="detail-valeur" id="d-type">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Montant</span><span id="d-montant">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Durée</span><span class="detail-valeur" id="d-duree">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Mensualité</span><span class="detail-valeur vert" id="d-mensualite">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Taux annuel</span><span class="detail-valeur" id="d-taux">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Revenus</span><span class="detail-valeur" id="d-revenus">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Taux endett.</span><span id="d-endettement">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Coût total</span><span class="detail-valeur" id="d-cout-total">—</span></div>
+      <div class="detail-ligne"><span class="detail-label">Intérêts</span><span class="detail-valeur" id="d-interets">—</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-titre">💬 Message</div>
+      <div style="background:rgba(255,255,255,.04);border-radius:8px;padding:12px;font-size:.87rem;color:var(--texte);line-height:1.6;font-style:italic;" id="d-message">—</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-titre">⚙️ Traitement</div>
+      <div class="statut-select-wrap">
+        <label>Statut</label>
+        <select class="select-statut" id="select-statut">
+          <option value="en_attente">🕐 En attente</option>
+          <option value="en_cours">⚙️ En cours</option>
+          <option value="approuve">✅ Approuvé</option>
+          <option value="refuse">❌ Refusé</option>
+          <option value="annule">🚫 Annulé</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:.78rem;font-weight:600;color:var(--gris-texte);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px;">Notes internes</label>
+        <textarea class="notes-textarea" id="notes-conseiller" placeholder="Vos notes sur ce dossier…"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="panneau-footer">
+    <button class="btn-sauver" id="btn-sauver" onclick="sauverDemande()">💾 Sauvegarder</button>
+    <button class="btn-annuler-panneau" onclick="fermerPanneau()">Annuler</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-admin" id="toast-admin">
+  <span class="t-icone">✅</span>
+  <div><strong>Succès</strong><span></span></div>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+verifierAuth();
+
+// ── Initialisation ─────────────────────────────────────────
+function init() {
+  initialiserSidebar();
+  initialiserFiltres();
+  lireParamsURL();
+  rafraichirListeAvecStats();
+}
+
+// ── Lire les paramètres de l'URL (?statut=en_attente) ──────
+function lireParamsURL() {
+  const params = new URLSearchParams(window.location.search);
+  const statut = params.get('statut');
+  const type   = params.get('type');
+  if (statut) {
+    ETAT.filtreStatut = statut;
+    const sel = document.getElementById('filtre-statut');
+    if (sel) sel.value = statut;
+  }
+  if (type) {
+    ETAT.filtreType = type;
+    const sel = document.getElementById('filtre-type');
+    if (sel) sel.value = type;
+  }
+}
+
+// ── Chargement liste + mini stats ─────────────────────────
+async function rafraichirListeAvecStats() {
+  await rafraichirListe();
+  mettreAJourSous();
+
+  // Mini stats (depuis le endpoint stats global)
+  try {
+    const json = await fetch(`${CONFIG.API_URL}/api/admin/stats`, {
+      headers: { 'x-admin-key': CONFIG.ADMIN_KEY }
+    }).then(r => r.json());
+
+    const g = json.data?.global?.[0] || {};
+    const p = json.data?.parStatut   || [];
+    document.getElementById('ms-total')?.textContent   != null && (document.getElementById('ms-total').textContent   = g.total || 0);
+    document.getElementById('ms-attente')?.textContent != null && (document.getElementById('ms-attente').textContent = p.find(s=>s._id==='en_attente')?.count || 0);
+    document.getElementById('ms-approuve')?.textContent!= null && (document.getElementById('ms-approuve').textContent= p.find(s=>s._id==='approuve')?.count  || 0);
+
+    const badge = document.getElementById('badge-en-attente');
+    const nb = p.find(s=>s._id==='en_attente')?.count || 0;
+    if (badge) { badge.textContent = nb; badge.style.display = nb>0 ? '' : 'none'; }
+  } catch(e) {}
+}
+
+function mettreAJourSous() {
+  const sous = document.getElementById('topbar-sous');
+  if (sous) {
+    const filtres = [
+      ETAT.filtreStatut ? `Statut : ${ETAT.filtreStatut}` : '',
+      ETAT.filtreType   ? `Type : ${ETAT.filtreType}`     : '',
+      ETAT.recherche    ? `Recherche : "${ETAT.recherche}"` : '',
+    ].filter(Boolean);
+    sous.textContent = filtres.length ? filtres.join(' · ') : `${ETAT.total} demande${ETAT.total!==1?'s':''}`;
+  }
+}
+
+// ── Tri colonnes ──────────────────────────────────────────
+function trierPar(champ) {
+  if (ETAT.triChamp === champ) {
+    ETAT.triOrdre = ETAT.triOrdre === -1 ? 1 : -1;
+  } else {
+    ETAT.triChamp = champ;
+    ETAT.triOrdre = -1;
+  }
+  // Mettre à jour les icônes
+  document.querySelectorAll('.tri-icone').forEach(el => el.textContent = '');
+  const icone = document.getElementById(`tri-${champ}`);
+  if (icone) icone.textContent = ETAT.triOrdre === -1 ? '↓' : '↑';
+  ETAT.page = 1;
+  rafraichirListe();
+}
+
+// ── Réinitialiser les filtres ─────────────────────────────
+function reinitialiserFiltres() {
+  ETAT.filtreStatut = '';
+  ETAT.filtreType   = '';
+  ETAT.recherche    = '';
+  ETAT.page         = 1;
+  document.getElementById('filtre-statut').value  = '';
+  document.getElementById('filtre-type').value    = '';
+  document.getElementById('input-recherche').value = '';
+  rafraichirListe();
+  history.replaceState({}, '', 'demandes.html');
+}
+
+// ── Checkbox "tout sélectionner" ─────────────────────────
+document.getElementById('cb-tout')?.addEventListener('change', function() {
+  document.querySelectorAll('.cb-demande').forEach(cb => cb.checked = this.checked);
+});
+
+// Exposer
+window.trierPar         = trierPar;
+window.reinitialiserFiltres = reinitialiserFiltres;
+
+init();
+</script>
+
+</body>
+</html>

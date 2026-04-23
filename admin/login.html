@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion — HaxFinance Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<div class="login-page">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <svg viewBox="0 0 28 28" fill="none">
+        <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" fill="#00C896" opacity=".2"/>
+        <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" stroke="#00C896" stroke-width="1.5"/>
+        <path d="M9 14l3 3 7-6" stroke="#00C896" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Hax<span>Finance</span>
+    </div>
+    <p class="login-sous">Espace conseiller — Accès sécurisé</p>
+    <div class="login-badge">🔐 Administration</div>
+
+    <!-- Formulaire -->
+    <form id="form-login">
+
+      <!-- Identifiant -->
+      <div class="champ-login">
+        <label for="identifiant">Identifiant</label>
+        <div class="input-login-wrap">
+          <span class="icone-champ">👤</span>
+          <input
+            type="text"
+            id="identifiant"
+            placeholder="admin"
+            autocomplete="username"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="champ-login">
+        <label for="mdp">Mot de passe</label>
+        <div class="input-login-wrap">
+          <span class="icone-champ">🔒</span>
+          <input
+            type="password"
+            id="mdp"
+            placeholder="••••••••••••"
+            autocomplete="current-password"
+            required
+          />
+          <!-- Bouton afficher/masquer -->
+          <button type="button" class="toggle-mdp" id="toggle-mdp" title="Afficher le mot de passe">
+            👁
+          </button>
+        </div>
+      </div>
+
+      <!-- Message d'erreur -->
+      <div class="login-erreur" id="login-erreur">
+        Identifiant ou mot de passe incorrect.
+      </div>
+
+      <!-- Bouton connexion -->
+      <button type="submit" class="btn-login" id="btn-login">
+        Se connecter
+      </button>
+
+    </form>
+
+    <!-- Info pour les tests -->
+    <p class="login-info">
+      Identifiants par défaut : <code>admin</code> / <code>haxfinance2025</code><br>
+      <small style="margin-top:4px;display:block;font-size:.73rem;">
+        ⚠️ Changez ces identifiants dans le fichier <code>.env</code> avant de mettre en ligne
+      </small>
+    </p>
+
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+<script>
+// ── Si déjà connecté, rediriger vers le dashboard ─────────
+if (estConnecte()) {
+  window.location.href = 'dashboard.html';
+}
+
+// ── Toggle affichage mot de passe ──────────────────────────
+document.getElementById('toggle-mdp').addEventListener('click', function() {
+  const input = document.getElementById('mdp');
+  const estVisible = input.type === 'text';
+  input.type = estVisible ? 'password' : 'text';
+  this.textContent = estVisible ? '👁' : '🙈';
+});
+
+// ── Soumission du formulaire ───────────────────────────────
+document.getElementById('form-login').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const identifiant = document.getElementById('identifiant').value.trim();
+  const mdp         = document.getElementById('mdp').value;
+  const erreurEl    = document.getElementById('login-erreur');
+  const btnEl       = document.getElementById('btn-login');
+
+  // Masquer l'erreur précédente
+  erreurEl.classList.remove('visible');
+
+  // Feedback visuel
+  btnEl.textContent = '⏳ Vérification…';
+  btnEl.disabled    = true;
+
+  // Petite pause pour simuler la vérification (UX)
+  await new Promise(r => setTimeout(r, 600));
+
+  try {
+    // Vérification des identifiants via l'API backend
+    const reponse = await fetch(`${CONFIG.API_URL}/api/admin/login`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ identifiant, mdp }),
+    });
+
+    const json = await reponse.json();
+
+    if (reponse.ok && json.succes) {
+      // Sauvegarder la clé de session et rediriger
+      sauverSession(json.cle);
+      window.location.href = 'dashboard.html';
+    } else {
+      erreurEl.textContent = json.message || 'Identifiant ou mot de passe incorrect.';
+      erreurEl.classList.add('visible');
+      btnEl.textContent = 'Se connecter';
+      btnEl.disabled    = false;
+    }
+
+  } catch (err) {
+    // Serveur non joignable
+    erreurEl.textContent = 'Impossible de contacter le serveur. Vérifiez que le backend tourne (npm run dev).';
+    erreurEl.classList.add('visible');
+    btnEl.textContent = 'Se connecter';
+    btnEl.disabled    = false;
+  }
+});
+
+// ── Focus automatique sur l'identifiant ───────────────────
+document.getElementById('identifiant').focus();
+</script>
+
+</body>
+</html>

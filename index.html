@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HaxFinance — Votre prêt en ligne rapide et simple</title>
+  <meta name="description" content="HaxFinance vous accompagne dans tous vos projets de financement. Prêt personnel, immobilier, automobile au meilleur taux." />
+
+  <!-- Google Fonts : Playfair Display + DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     LOADER
+═══════════════════════════════════════════════════════ -->
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-logo">Hax<span>Finance</span></div>
+    <div class="loader-bar"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <!-- Icône hexagone SVG -->
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" fill="#00C896" opacity=".2"/>
+      <path d="M14 2L25.26 8.5V21.5L14 28L2.74 21.5V8.5L14 2Z" stroke="#00C896" stroke-width="1.5"/>
+      <path d="M9 14l3 3 7-6" stroke="#00C896" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Hax<span>Finance</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html" class="actif">Accueil</a></li>
+    <li><a href="pages/services.html">Services</a></li>
+    <li><a href="pages/simulation.html">Simulation</a></li>
+    <li><a href="pages/apropos.html">À propos</a></li>
+    <li><a href="pages/contact.html">Contact</a></li>
+    <li><a href="pages/simulation.html" class="nav-cta">Simuler un prêt</a></li>
+  </ul>
+
+  <!-- Burger mobile -->
+  <button class="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Menu mobile (affiché via JS) -->
+<div class="nav-mobile">
+  <a href="index.html">Accueil</a>
+  <a href="pages/services.html">Services</a>
+  <a href="pages/simulation.html">Simulation</a>
+  <a href="pages/apropos.html">À propos</a>
+  <a href="pages/contact.html">Contact</a>
+  <a href="pages/simulation.html" class="nav-cta" style="text-align:center;border-radius:50px;">Simuler un prêt</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grille"></div>
+
+  <div class="conteneur">
+
+    <!-- Texte principal -->
+    <div class="hero-texte">
+      <div class="badge">🏆 Meilleur taux garanti</div>
+
+      <h1 class="hero-titre">
+        Financer vos projets<br>
+        n'a jamais été aussi<br>
+        <span class="accent">simple & rapide</span>
+      </h1>
+
+      <p class="hero-desc">
+        HaxFinance vous accompagne avec des taux compétitifs, une réponse rapide et un accompagnement personnalisé pour tous vos besoins de financement.
+      </p>
+
+      <div class="hero-actions">
+        <a href="pages/simulation.html" class="btn btn-vert">
+          <!-- Icône calculatrice -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M8 6h8M8 10h2M12 10h2M16 10h.01M8 14h2M12 14h2M16 14h2M8 18h2M12 18h2M16 18h2"/></svg>
+          Simuler mon prêt
+        </a>
+        <a href="pages/services.html" class="btn btn-outline">
+          Découvrir nos offres
+        </a>
+      </div>
+
+      <!-- Stats clés -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-nombre">
+            <span data-cible="15000" data-suffixe="+">0</span>
+          </div>
+          <div class="stat-label">Clients financés</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-nombre">
+            <span data-cible="2.1" data-suffixe="%">0%</span>
+          </div>
+          <div class="stat-label">Taux à partir de</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-nombre">
+            <span data-cible="24" data-suffixe="h">0h</span>
+          </div>
+          <div class="stat-label">Réponse garantie</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-nombre">
+            <span data-cible="98" data-suffixe="%">0%</span>
+          </div>
+          <div class="stat-label">Satisfaction client</div>
+        </div>
+      </div>
+    </div><!-- /hero-texte -->
+
+    <!-- Carte flottante visuelle -->
+    <div class="hero-visuel">
+      <!-- Carte principale simulée -->
+      <div class="carte-pret">
+        <div class="carte-pret-header">
+          <span class="carte-pret-titre">Simulation en cours</span>
+          <span class="carte-pret-badge">Prêt immobilier</span>
+        </div>
+        <div class="carte-montant">180 000 €</div>
+        <div class="carte-mensualite">Mensualité estimée : <strong style="color:var(--vert)">842 € / mois</strong></div>
+
+        <!-- Barre de progression -->
+        <div class="barre-progres">
+          <div class="barre-progres-inner" style="width:62%"></div>
+        </div>
+        <div class="barre-label">
+          <span>Capital remboursé</span>
+          <span style="color:var(--vert)">62%</span>
+        </div>
+      </div>
+
+      <!-- Mini cartes d'info -->
+      <div class="mini-carte">
+        <div class="mini-carte-icone">💰</div>
+        <div class="mini-carte-texte">
+          <p>Taux immobilier</p>
+          <strong>2,1% / an</strong>
+        </div>
+      </div>
+      <div class="mini-carte">
+        <div class="mini-carte-icone">⚡</div>
+        <div class="mini-carte-texte">
+          <p>Délai de réponse</p>
+          <strong>Sous 24 heures</strong>
+        </div>
+      </div>
+    </div><!-- /hero-visuel -->
+
+  </div><!-- /conteneur -->
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     AVANTAGES
+═══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Pourquoi nous choisir</div>
+      <h2 class="titre-section">Des avantages <span class="accent">concrets</span> pour vous</h2>
+      <p class="sous-titre">Nous mettons la technologie et l'expertise financière au service de vos projets.</p>
+    </div>
+
+    <div class="grille-avantages">
+      <div class="carte-avantage fade-in fade-in-delay-1">
+        <div class="avantage-icone">⚡</div>
+        <h3 class="avantage-titre">Réponse en 24h</h3>
+        <p class="avantage-desc">Votre demande est analysée rapidement. Recevez une réponse de principe sous 24 heures ouvrées.</p>
+      </div>
+      <div class="carte-avantage fade-in fade-in-delay-2">
+        <div class="avantage-icone">🔒</div>
+        <h3 class="avantage-titre">100% Sécurisé</h3>
+        <p class="avantage-desc">Vos données personnelles et financières sont protégées par un chiffrement de niveau bancaire.</p>
+      </div>
+      <div class="carte-avantage fade-in fade-in-delay-3">
+        <div class="avantage-icone">📊</div>
+        <h3 class="avantage-titre">Meilleurs taux</h3>
+        <p class="avantage-desc">Nous négocions les taux les plus bas du marché grâce à notre réseau de partenaires financiers.</p>
+      </div>
+      <div class="carte-avantage fade-in fade-in-delay-4">
+        <div class="avantage-icone">🤝</div>
+        <h3 class="avantage-titre">Accompagnement</h3>
+        <p class="avantage-desc">Un conseiller dédié vous accompagne à chaque étape, du dossier jusqu'au déblocage des fonds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     APERÇU DES PRÊTS
+═══════════════════════════════════════════════════════ -->
+<section class="section section-alt">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Nos offres de financement</div>
+      <h2 class="titre-section">Des prêts adaptés à <span class="accent">chaque projet</span></h2>
+      <p class="sous-titre">Que ce soit pour votre maison, votre voiture ou un projet personnel, nous avons la solution.</p>
+    </div>
+
+    <div class="grille-prets">
+
+      <!-- Prêt Personnel -->
+      <div class="carte-service fade-in fade-in-delay-1">
+        <div class="carte-service-img">
+          <!-- Image via picsum (photos libres de droits) -->
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&q=80" alt="Prêt personnel" loading="lazy" />
+          <span class="taux">3% / an</span>
+        </div>
+        <div class="carte-service-corps">
+          <h3>Prêt Personnel</h3>
+          <p>Financement flexible pour tous vos projets personnels : vacances, travaux, mariage, études…</p>
+          <a href="pages/simulation.html?type=personnel" class="btn btn-vert">Simuler ce prêt</a>
+        </div>
+      </div>
+
+      <!-- Prêt Immobilier -->
+      <div class="carte-service fade-in fade-in-delay-2">
+        <div class="carte-service-img">
+          <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80" alt="Prêt immobilier" loading="lazy" />
+          <span class="taux">2,1% / an</span>
+        </div>
+        <div class="carte-service-corps">
+          <h3>Prêt Immobilier</h3>
+          <p>Concrétisez votre projet d'achat ou de construction avec les meilleurs taux du marché.</p>
+          <a href="pages/simulation.html?type=immobilier" class="btn btn-vert">Simuler ce prêt</a>
+        </div>
+      </div>
+
+      <!-- Prêt Auto -->
+      <div class="carte-service fade-in fade-in-delay-3">
+        <div class="carte-service-img">
+          <img src="https://images.unsplash.com/photo-1485291571150-772bcfc10da5?w=600&q=80" alt="Prêt automobile" loading="lazy" />
+          <span class="taux">2,7% / an</span>
+        </div>
+        <div class="carte-service-corps">
+          <h3>Prêt Automobile</h3>
+          <p>Achetez le véhicule de vos rêves avec un crédit auto adapté, neuf ou occasion.</p>
+          <a href="pages/simulation.html?type=automobile" class="btn btn-vert">Simuler ce prêt</a>
+        </div>
+      </div>
+
+      <!-- Rachat de crédit -->
+      <div class="carte-service fade-in fade-in-delay-4">
+        <div class="carte-service-img">
+          <img src="https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=600&q=80" alt="Rachat de crédit" loading="lazy" />
+          <span class="taux">2,8% / an</span>
+        </div>
+        <div class="carte-service-corps">
+          <h3>Rachat de Crédit</h3>
+          <p>Regroupez tous vos crédits en un seul pour réduire vos mensualités et simplifier votre budget.</p>
+          <a href="pages/simulation.html?type=rachat" class="btn btn-vert">Simuler ce prêt</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:40px">
+      <a href="pages/services.html" class="btn btn-outline">Voir tous nos services en détail</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     TÉMOIGNAGES
+═══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="centre fade-in">
+      <div class="badge">Avis clients</div>
+      <h2 class="titre-section">Ce que disent nos <span class="accent">clients</span></h2>
+      <p class="sous-titre">Plus de 15 000 clients nous font confiance. Voici quelques-uns de leurs témoignages.</p>
+    </div>
+
+    <div class="grille-temoignages">
+
+      <div class="carte-temoignage fade-in fade-in-delay-1">
+        <div class="etoiles">★★★★★</div>
+        <p class="temoignage-texte">
+          Processus incroyablement fluide. J'ai obtenu mon prêt immobilier en moins d'une semaine. Mon conseiller était disponible et très professionnel.
+        </p>
+        <div class="temoignage-auteur">
+          <div class="avatar">SM</div>
+          <div class="auteur-infos">
+            <strong>Sophie M.</strong>
+            <span>Prêt immobilier — 220 000 €</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="carte-temoignage fade-in fade-in-delay-2">
+        <div class="etoiles">★★★★★</div>
+        <p class="temoignage-texte">
+          J'ai regroupé 4 crédits en un seul. Ma mensualité a baissé de 340 € par mois. Je recommande vivement HaxFinance pour le rachat de crédit.
+        </p>
+        <div class="temoignage-auteur">
+          <div class="avatar">TL</div>
+          <div class="auteur-infos">
+            <strong>Thomas L.</strong>
+            <span>Rachat de crédit — 85 000 €</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="carte-temoignage fade-in fade-in-delay-3">
+        <div class="etoiles">★★★★☆</div>
+        <p class="temoignage-texte">
+          Très bon service, simulation en ligne précise et conforme à l'offre finale. J'ai pu financer ma voiture rapidement. Merci HaxFinance !
+        </p>
+        <div class="temoignage-auteur">
+          <div class="avatar">AB</div>
+          <div class="auteur-infos">
+            <strong>Amélie B.</strong>
+            <span>Prêt automobile — 22 000 €</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     CTA FINAL
+═══════════════════════════════════════════════════════ -->
+<section class="section-cta fade-in">
+  <div class="conteneur">
+    <div class="badge" style="margin:0 auto 18px;">🚀 Commencez maintenant</div>
+    <h2 class="titre-section">Prêt à concrétiser<br>votre <span class="accent">projet</span> ?</h2>
+    <p class="sous-titre">Simulez votre prêt en 2 minutes, sans engagement. Réponse sous 24h.</p>
+    <div class="actions">
+      <a href="pages/simulation.html" class="btn btn-vert">Simuler mon prêt gratuitement</a>
+      <a href="pages/contact.html" class="btn btn-outline">Contacter un conseiller</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <div class="conteneur">
+    <div class="footer-grille">
+
+      <!-- Colonne marque -->
+      <div>
+        <div class="footer-logo">Hax<span>Finance</span></div>
+        <p class="footer-desc">Votre partenaire financier de confiance depuis 2010. Nous accompagnons plus de 15 000 clients dans leurs projets de financement.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" aria-label="Facebook">f</a>
+          <a href="#" class="social-btn" aria-label="Twitter">𝕏</a>
+          <a href="#" class="social-btn" aria-label="LinkedIn">in</a>
+          <a href="#" class="social-btn" aria-label="Instagram">📷</a>
+        </div>
+      </div>
+
+      <!-- Nos services -->
+      <div class="footer-col">
+        <h4>Nos services</h4>
+        <ul>
+          <li><a href="pages/services.html#personnel">Prêt personnel</a></li>
+          <li><a href="pages/services.html#immobilier">Prêt immobilier</a></li>
+          <li><a href="pages/services.html#automobile">Prêt automobile</a></li>
+          <li><a href="pages/services.html#rachat">Rachat de crédit</a></li>
+        </ul>
+      </div>
+
+      <!-- Entreprise -->
+      <div class="footer-col">
+        <h4>Entreprise</h4>
+        <ul>
+          <li><a href="pages/apropos.html">À propos</a></li>
+          <li><a href="pages/apropos.html#equipe">Notre équipe</a></li>
+          <li><a href="pages/apropos.html#valeurs">Nos valeurs</a></li>
+          <li><a href="pages/contact.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Légal -->
+      <div class="footer-col">
+        <h4>Légal</h4>
+        <ul>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Politique de confidentialité</a></li>
+          <li><a href="#">Conditions d'utilisation</a></li>
+          <li><a href="#">RGPD</a></li>
+        </ul>
+      </div>
+
+    </div><!-- /footer-grille -->
+
+    <div class="footer-bas">
+      <p>© 2025 HaxFinance. Tous droits réservés. — Établissement de crédit agréé ACPR n°123456</p>
+      <div class="footer-bas-liens">
+        <a href="#">Cookies</a>
+        <a href="#">Sitemap</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
