@@ -7,7 +7,7 @@
 
 // ── Configuration ────────────────────────────────────────────
 const CONFIG = {
-  API_URL:      'http://localhost:5000',
+  API_URL:      '[https://hax-back.onrender](https://hax-back.onrender)',
   ADMIN_KEY:    'admin_haxfinance_2025',  // Doit correspondre à .env ADMIN_KEY
   SESSION_KEY:  'hax_admin_session',
   PAGE_SIZE:    12,
