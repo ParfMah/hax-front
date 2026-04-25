@@ -6,12 +6,6 @@
 'use strict';
 
 // ── Configuration ────────────────────────────────────────────
-const CONFIG = {
-  API_URL:      'https://hax-back.onrender.com',
-  ADMIN_KEY:    'haxfinance2025',  // Doit correspondre à .env ADMIN_KEY
-  SESSION_KEY:  'hax_admin_session',
-  PAGE_SIZE:    12,
-};
 
 // ── État global de l'application ─────────────────────────────
 const ETAT = {
